@@ -1,0 +1,120 @@
+\documentclass[nocopyrightspace]{sigplanconf}
+
+\input{macros}
+
+\begin{document}
+\title{Lambda Calculus Semantics}
+\authorinfo{}{}{}
+\date{}
+\maketitle
+
+% -------ABSTRACT SYNTAX---------
+\section{Abstract Syntax}
+
+\framed[]{
+\begin{gather*}
+  x \in \Variable
+\end{gather*}
+}
+
+\vspace{.05in}
+
+\vsp
+
+\framed[]{
+\begin{align*}
+  e \in \Exp &::= \fun \alt e_1 \; e_2 \alt x
+\end{align*}
+}
+
+% ----------------SEMANTIC DOMAINS----------------
+\section{Semantic Domains}
+\framed[]{
+\begin{gather*}
+  \conf \in \Conf = \Exp \times \Env
+\end{gather*}
+}
+
+\vsp
+
+\framed[]{
+\begin{align*}
+  \env \in \Env &= \Variable \to \Closure
+\end{align*}
+}
+
+\vsp
+
+\framed[]{
+\begin{align*}
+  \clo \in \Closure &::= \clot
+  \\
+  v \in \Value = \Closure
+\end{align*}
+}
+
+\vsp
+
+% -------------SEMANTIC HELPER FUNCTIONS------------
+\section{Semantic Helper Functions}
+
+\begin{mdframed}
+  \begin{flalign*}
+    &\init \in \Exp \to \Conf&
+    \\
+    \hline
+    \\
+    &\init(e) = e \cdot \env \quad\mbox{where }&
+    \\
+    &\qquad \env = \emptyset
+    \\
+  \end{flalign*}
+\end{mdframed}
+
+\vsp
+
+% -----------LAMBDA CALC SEMANTICS---------------
+\section{Lambda Calculus Semantics}
+
+\framed[]{
+\begin{gather*}
+  \llbracket \cdot \rrbracket \in \Conf \to \Value
+\end{gather*}
+}
+
+\vsp
+
+\framed {
+  \infax[clo]
+  {
+    \tup[\fun] \eval \clot
+  }
+}
+
+\vsp
+
+\framed {
+  \infrule[var]
+  {
+    \assign{v}{\env(x)}
+  }
+  {
+    \tup[x] \eval v
+  }
+}
+
+\vsp
+
+\framed {
+  \infrule[apply]
+  {
+    \tup[e_1] \eval \clot[\env'] \andalso \tup[e_2] \eval v
+    \\
+    \assign{\env''}{\env'[x \mapsto v]}
+  }
+  {
+    \tup[e_1 \; e_2] \eval \tup[e][\env'']
+  }
+}
+
+\end{document}
