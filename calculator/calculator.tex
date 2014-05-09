@@ -13,9 +13,14 @@ This document describes the \emph{syntax} and \emph{semantics} of a simple langu
 A language's \emph{syntax} refers to what we can write in the language, and the \emph{semantics} refer to what the language does in response to what is written.
 These two ideas are distinct, despite the fact that they are often conflated with each other.
 
-In this document, the languagr of interest is that of a simple evaluator of arithmetic expressions.
+In this document, the language of interest is that of a simple evaluator of arithmetic expressions.
 That is, given the expression $2 + 3$, we define a series of rules to get back the answer $5$.
 The point here is to take something you are already familiar with and show what it looks like when formalized.
+
+A caveat for someone new to programming is that, pretty much no matter what we do, somewhere there is some idea of evaluation.
+This is annoying, considering that programming is really the art of manipulating evaluation.
+I have yet to come up with a better way; at some point, we need evaluation somewhere.
+I have tried to make the steps as simple as possible to avoid any jumps in logic.
 
 \section{Concrete Syntax}
 For most any language, there is a notion of \emph{concrete syntax}.
@@ -82,5 +87,125 @@ As shown, because of the parentheses, there was no ambiguity in figuring out how
 \section{Semantics}
 At this point, we've defined the abstract syntax of our language.
 Now we need to attach a semantics to this syntax.
+There are a variety of accepted ways to do this, all with specific pros and cons.
+One approach is to talk about it informally in English, but English is not a particularly precise or concise language for this.
+Instead, we will take a formal approach rooted in mathematics, and define what is known as a \emph{big-step semantics}.
+In a big-step semantics, we define a \emph{recursive evaluator} over the abstract syntax.
+It is an \emph{evaluator} in that it evaluates some expression down to a value.
+It is \emph{recursive} in that it is defined largely in terms of itself.
+For example, consider the evaluation of some arithmetic expression $e_1 + e_2$.
+Here, we could (and will) define this by evaluating $e_1$ and then evaluating $e_2$, and finally adding the results together.
+This is actually recursive, because both $e_1$ and $e_2$ could themselves have the form $e_3 + e_4$, and so on.
+By the nature of the BNF rules, we are guaranteed that we will eventually hit a number, and so we won't go about this same process forever.
+That is, while the BNF rules describe an infinite set of programs, each program is of finite size.
+
+Without further ado, let's get to the semantics.
+First, we define exactly what it is our evaluator does:
+
+\framed[]{
+  \begin{gather*}
+    \eval \;\in \Exp \to \Int
+  \end{gather*}
+}
+
+This is known as a \emph{signature}: a definition of the \emph{types} an operation works on.
+The above signature states that $\eval$ takes an arithmetic expression (which is a type) and gives us back an integer (which is another type).
+Intuitively, this works just like a standard desk calculator; the user types in an arithmetic expression, and the calculator gives back an answer.
+For simplicity, we consider a calculator that can handle only integers, but the whole formalization is pretty much the same if we were to apply this to, say, real numbers.
+
+Now that we have the signature of $\eval$, we can start writing some rules for it.
+The first one is below:
+
+\framed[]{
+  \infax[num]
+  {
+    n \eval n
+  }
+}
+
+What the above rule states is that if we give some integer $n$ to $\eval$ (the item to the left of the $\eval$), then we get back the same integer $n$.
+
+Now for another rule.
+Before trying to read this rule, we define the operator $\bar{\bop}$ to correspond to some predefined arithmetic operator, one that takes two \textbf{integers} (not expressions!) and returns an integer.
+For example, $\bar{+}$ corresponds to some given arithmetic operator for $+$.
+Without further ado, here is the rule:
+
+\framed[]{
+  \infrule[op-norm]
+  {
+    \bop \in \{ +, -, \times \} \andalso e_1 \eval n_1 \andalso e_2 \eval n_2 \andalso n = n_1 \;\bar{\bop}\; n_2
+  }
+  {
+    e_1 \bop e_2 \eval n
+  }
+}
+
+Suddenly things got a lot more complex.
+To read this rule, first look at what is below the big line, specifically that to the left of the $\eval$.
+Looking only at that portion, in plain English, this rule is stating that it applies whenever the program has the form $e_1 \bop e_2$.
+From there, the rule manipulates $e_1$, $\bop$, and $e_2$ in specific ways.
+
+For any rule with a line like this, anything above the line must also hold for the rule as a whole to hold.
+Each chunk above the bar (e.g., the $\bop \in \{ +, -, \times \}$ and $e_1 \eval n_1$ portions) is referred to as a \emph{premise}.
+A premise is a logical statement that can be either true or false, and can manipulate variables like $e_1$ and $\bop$ in the process.
+
+Let's go over each one of these premises now.
+The first premise says that for this rule to apply, the arithmetic operator being applied (i.e., $\bop$) must be one of $+$, $-$, or $\times$.
+This rule does not work for $\div$; that will be handled in a later rule.
+
+The second premise says that the expression $e_1$ evaluates down to the integer $n_1$.
+Logically, this holds as long as $e_1$ can be evaluated.
+
+The third premise is much like the second, except that it is for the expression $e_2$ and the integer $n_2$.
+
+Now for the fourth premise, which has a lot of buried complexity.
+This is stating, in plain English, that some new variable $n$ is equal to the result of $n_1 \;\bar{\bop}\; n_2$.
+Recall that $\bar{\bop}$ refers to the underlying arithmetic operation for $\bop$.
+Basically, this just lets us perform the actual operation, assuming a form of each arithmetic operator is available.
+For arithmetic specifically, it is commonly assumed that such operations exist, as they usually do when we go to implement these rules on a computer.
+We could go through the trouble of implementing these operators right in the semantics themselves, but this is usually considered bad practice because:
+\begin{enumerate}
+  \item People generally understand what these operations must do anyway.
+    The point of devising a formal semantics specification is to explain anything that might be tricky, not to go through tedium for the sake of tedium.
+    Adding them would simply clutter up things and make them needlessly complex.
+  \item They constrain what it means to be a ``correct'' implementation in a very bad way.
+    For example, say we have a particularly inefficient way of handling multiplication specified in the semantics.
+    For an implementation to be completely correct and consistent, it \textbf{must} implement this inefficient way, even if there is some other way available which is better in every way imaginable.
+\end{enumerate}
+
+So what about the $\div$ operator?
+For this, we have one last rule, just for $\div$:
+
+\framed[]{
+  \infrule[op-div]
+  {
+    e_1 \eval n_1 \andalso e_2 \eval n_2 \andalso n_2 \neq 0 \andalso n = n_1 \;\bar{\div}\; n_2
+  }
+  {
+    e_1 \div e_2 \eval n
+  }
+}
+
+This time around, there is no premise to constrain $\bop$; $\bop$ was already constrainted to be $\div$ based on what is to the left of $\eval$ below the bar.
+The first and second premises are identical to the second and third premises of the previous rule; we just need to evaluate $e_1$ and $e_2$ down to the integers $n_1$ and $n_2$, respectively.
+The third premise is where things start to get interesting.
+In the third premise, we constrain this rule to only apply when $n_2 \neq 0$.
+In plain English, this says that we don't allow division by zero.
+The fourth premise performs the actual division, and is guaranteed to never see a division by zero thanks to the third premise.
+
+The above rule is that the last one we will define.
+This begs the question then - what happens if we attempt to divide by zero?
+In this case, no rule applies.
+Whenever we hit a case where no rule applies, the technical term is \emph{getting stuck} (seriously), and it usually indicates some sort of error condition.
+When we go to implement this on a computer, we may want to present the user with an error of some sort.
+
+Now for a thought question.
+What happens if we were to remove the first premise from OP-NORM (the rule before division)?
+That is, we allow this rule to operate on more than just $+$, $-$, and $\times$.
+In this case, the semantics would become \emph{nondeterministic}, in constract with the current \emph{deterministic} semantics.
+In a deterministic semantics, at any given point in time, at most one rule applies, whereas a nondeterministic allows for multiple rules at a time to apply.
+Mathematically, there is nothing wrong with this - one can think of splitting off computation in every direction where a rule applies, and then performing all subsequent computations in parallel.
+When it comes to actually implementing things though, a nondeterministic semantics is usually undesirable - this means that the program can do mean different things at the same time!
+There are some languages for which this makes sense, but oftentimes we need to be careful to make our rules mutually exclusive.
 
 \end{document}
