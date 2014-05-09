@@ -62,18 +62,17 @@
 \newcommand{\conf}{\ensuremath{\mathcal{C}}}
 \newcommand{\env}{\ensuremath{\rho}}
 \newcommand{\store}{\ensuremath{\sigma}}
-\newcommand{\eval}{\ensuremath{\Rightarrow}}
-\newcommandx{\tup}[2][1=e, 2=\env, usedefault]{\ensuremath{\llbracket #1 \rrbracket #2}}
+\newcommand{\eval}{\ensuremath{\Downarrow}}
 \newcommand{\dom}{\ensuremath{\mtt{dom}}\xspace}
 \newcommand{\init}{\ensuremath{\ttt{inject}}\xspace}
 \newcommand{\clo}{\ensuremath{\mtt{clo}}\xspace}
-\newcommandx{\clot}[2][1=\env, 2=\fun, usedefault]{\ensuremath{#1 \cdot #2}}
+\newcommand{\clov}[2]{\ensuremath{(#1 \cdot #2)}}
 
 % misc
 \newcommandx{\listtwo}[2][1=e_1, 2=e_2]{#1\cdot#2}
 \newcommandx{\listthree}[3][1=e_1, 2=e_2, 3=e_3]{#1\cdot#2\cdot#3}
 
-\newcommand{\pair}[2]{\ensuremath{(#1, #2)}}
+\newcommand{\pair}[2]{\ensuremath{(#1,\, #2)}}
 \newcommand{\feinput}{\set{\pair{g}{\store}}}
 \newcommand{\ruleBlock}{\vsp\vsp\vsp}
 \newcommand{\subscr}[1]{\textsubscript{#1}}

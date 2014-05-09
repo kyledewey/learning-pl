@@ -47,7 +47,7 @@
 
 \framed[]{
 \begin{align*}
-  \clo \in \Closure &::= \clot
+  \clo \in \Closure &::= \clov{\env}{\fun}
   \\
   v \in \Value = \Closure
 \end{align*}
@@ -78,7 +78,7 @@
 
 \framed[]{
 \begin{gather*}
-  \llbracket \cdot \rrbracket \in \Conf \to \Value
+  \eval \;\in \Conf \to \Value
 \end{gather*}
 }
 
@@ -87,7 +87,7 @@
 \framed {
   \infax[clo]
   {
-    \tup[\fun] \eval \clot
+    \pair{\fun}{\env} \eval \clov{\env}{\fun}
   }
 }
 
@@ -99,7 +99,7 @@
     \assign{v}{\env(x)}
   }
   {
-    \tup[x] \eval v
+    \pair{x}{\env} \eval v
   }
 }
 
@@ -108,12 +108,12 @@
 \framed {
   \infrule[apply]
   {
-    \tup[e_1] \eval \clot[\env'] \andalso \tup[e_2] \eval v
+    \pair{e_1}{\env} \eval \clov{\env'}{\fun} \andalso \pair{e_2}{\env} \eval v
     \\
     \assign{\env''}{\env'[x \mapsto v]}
   }
   {
-    \tup[e_1 \; e_2] \eval \tup[e][\env'']
+    \pair{e_1 \; e_2}{\env} \eval \pair{e}{\env''}
   }
 }
 
