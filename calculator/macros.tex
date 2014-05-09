@@ -1,0 +1,89 @@
+\usepackage{bcprules}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[mathscr]{eucal}
+\usepackage{stmaryrd}
+\usepackage{xspace}
+\usepackage{mathrsfs}
+\usepackage{txfonts}
+\usepackage{array}
+\usepackage{xargs}
+\usepackage[figuresleft]{rotating}
+\usepackage{color}
+\usepackage{mdframed}
+
+%% misc
+\newcommand{\alt}{\ \mid\ }
+\newcommand{\lalt}{\ \ \ \alt}
+\newcommand{\anywhere}[1]{\ensuremath{\mbox{#1}}}
+\newcommand{\kw}[1]{\anywhere{\sffamily{\bfseries\small {#1}}}}
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\newcommand{\blue}[1]{{\color{blue}{#1}}}
+\newcommand{\green}[1]{{\color{green}{#1}}}
+\newcommand{\note}[1]{\red{\textbf{#1}}}
+\newcommand{\ignore}[1]{}
+\newcommand{\ulist}[1]{\begin{itemize} #1 \end{itemize}}
+\newcommand{\vsp}{\vspace{.1in}}
+\newcommand{\nvsp}{\vspace{-.1in}}
+\newcommandx{\framed}[2][1=\nvsp\nvsp]{\begin{mdframed}#1 #2 \nvsp\nvsp\end{mdframed}}
+%\newcommandx{\framed}[2][1=\nvsp\nvsp]{#2}
+\newcommand{\say}{\vsp\vsp\noindent}
+
+%% fonts
+\newcommand{\mtt}[1]{\ensuremath{\mathit{#1}}}
+\newcommand{\mrm}[1]{\ensuremath{\mathrm{#1}}}
+\newcommand{\ttt}[1]{\ensuremath{\mbox{\small \texttt{#1}}}}
+
+%% syntactic domains
+\newcommand{\Variable}{\ensuremath{\mtt{Variable}}\xspace}
+\newcommand{\Exp}{\ensuremath{\mtt{Expression}}\xspace}
+
+%% syntactic objects
+\newcommand{\set}[1]{\ensuremath{\overrightarrow{#1}}}
+\newcommandx{\seq}[1][1=e]{\ensuremath{\vec{#1}}}
+\newcommandx{\fun}[2][1=x, 2=e]{\ensuremath{\lambda #1.#2}}
+
+%% semantic domains
+\newcommand{\Env}{\ensuremath{\mtt{Env}}\xspace}
+\newcommand{\Store}{\ensuremath{\mtt{Store}}\xspace}
+\newcommand{\BaseValue}{\ensuremath{\mtt{BaseValue}}\xspace}
+\newcommand{\JumpValue}{\ensuremath{\mtt{JumpValue}}\xspace}
+\newcommand{\FEIValue}{\ensuremath{\mtt{FEIValue}}\xspace}
+\newcommand{\FEOValue}{\ensuremath{\mtt{FEOValue}}\xspace}
+\newcommand{\Value}{\ensuremath{\mtt{Value}}\xspace}
+\newcommand{\Addr}{\ensuremath{\mtt{Address}}\xspace}
+\newcommand{\Conf}{\ensuremath{\mtt{Config}}\xspace}
+\newcommand{\Closure}{\ensuremath{\mtt{Closure}}\xspace}
+\newcommand{\List}{\ensuremath{\mtt{List}}\xspace}
+
+%% semantic objects
+\newcommand{\conf}{\ensuremath{\mathcal{C}}}
+\newcommand{\env}{\ensuremath{\rho}}
+\newcommand{\store}{\ensuremath{\sigma}}
+\newcommand{\eval}{\ensuremath{\Downarrow}}
+\newcommand{\dom}{\ensuremath{\mtt{dom}}\xspace}
+\newcommand{\init}{\ensuremath{\ttt{inject}}\xspace}
+\newcommand{\clo}{\ensuremath{\mtt{clo}}\xspace}
+\newcommand{\clov}[2]{\ensuremath{(#1 \cdot #2)}}
+
+% misc
+\newcommandx{\listtwo}[2][1=e_1, 2=e_2]{#1\cdot#2}
+\newcommandx{\listthree}[3][1=e_1, 2=e_2, 3=e_3]{#1\cdot#2\cdot#3}
+
+\newcommand{\pair}[2]{\ensuremath{(#1,\, #2)}}
+\newcommand{\feinput}{\set{\pair{g}{\store}}}
+\newcommand{\ruleBlock}{\vsp\vsp\vsp}
+\newcommand{\subscr}[1]{\textsubscript{#1}}
+\newcommandx{\nth}[1][1=n]{\ensuremath{#1}th\xspace}
+%\newcommand{\assign}[2]{#1 \triangleq #2}
+\newcommand{\assign}[2]{#1 = #2}
+\newcommand{\assignRev}[2]{\assign{#2}{#1}}
+\newcommand{\typeError}{``\mtt{TypeError}"}
+\newcommand{\notImpl}{``\mtt{NotImplemented}"}
+\newcommand{\todo}{\red{TODO:}\xspace}
+\newcommand{\Int}{\ensuremath{\mathbb{Z}}\xspace}
+\newcommand{\BinOp}{\ensuremath{\mtt{BinaryOperation}}\xspace}
+\newcommand{\bop}{\ensuremath{\oplus}}
+

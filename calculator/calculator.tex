@@ -1,0 +1,86 @@
+\documentclass[nocopyrightspace]{sigplanconf}
+
+\input{macros}
+
+\begin{document}
+\title{Calculator}
+\authorinfo{}{}{}
+\date{}
+\maketitle
+
+\section{Background}
+This document describes the \emph{syntax} and \emph{semantics} of a simple language.
+A language's \emph{syntax} refers to what we can write in the language, and the \emph{semantics} refer to what the language does in response to what is written.
+These two ideas are distinct, despite the fact that they are often conflated with each other.
+
+In this document, the languagr of interest is that of a simple evaluator of arithmetic expressions.
+That is, given the expression $2 + 3$, we define a series of rules to get back the answer $5$.
+The point here is to take something you are already familiar with and show what it looks like when formalized.
+
+\section{Concrete Syntax}
+For most any language, there is a notion of \emph{concrete syntax}.
+The concrete syntax is what the user actually writes down.
+For our calculator, some example expressions follow:
+\begin{align*}
+  &3 \times 7 + 23\\
+  &42 \div  2 \times 4 - 2 \times 9\\
+\end{align*}
+
+\section{Abstract Syntax}
+The \emph{abstract syntax} of a language is similar to the concrete syntax, except certain things are abstracted away.
+One of the most important things that is commonly abstracted away is operator precidence.
+For example, consider the arithmetic expression $2 + 3 \times 7$.
+Based on the PEMDAS rules, we know that we should look at this expression with an extra set of parentheses around the $\times$, like so: $2 + (3 \times 7)$.
+Handling these sorts of things can get tricky, and it tends to be a separate concern (who decided that $\times$ has higher precedence than $+$, anyway?).
+In fact, these sort of issues can be encapsulated in the \emph{parser}, a tool that reads in some input string and converts it to abstract syntax.
+
+For our purposes, the job of the parser is not particularly interesting.
+As such, we tend to work only with abstract syntax.
+
+Abstract syntax is usually represented as rules in \emph{Backus-Naur Form}, or BNF for short.
+BNF defines what constitutes a \emph{syntactically well-formed} program.
+That is, given some input, we can use BNF rules to determine if something has the syntax of a program.
+BNF can be seen as a way to succintly describe all possible programs in a given language, which is impressive considering that nearly all languages have an infinite number of such programs.
+A full description of BNF is beyond the scope of this document, but what is contained within should be enough to get you rolling.
+
+The BNF rules corresponding to our expression evaluator follow.
+\framed[]{
+  \begin{gather*}
+    n \in \Int
+  \end{gather*}
+}
+The rule above states that $n$ is some member of $\Int$, i.e., the infinite set of all integers.
+In plain English, this means that everytime we see a use of $n$, this is a stand-in for some integer.
+
+Now for the operations we will use:
+\framed[]{
+  \begin{align*}
+    \bop \in \BinOp &::= + | - | \times | \div
+  \end{align*}
+}
+
+What the above says is that anytime we see $\bop$, this can be one of $+$, $-$, $\times$, or $\div$.
+The name $\BinOp$, and the use of the identifier $\bop$, are not really important for understanding what this does.
+All were defining at this point is what this language looks like - the syntax, not the semantics.
+
+Now for the actual arithmetic expressions:
+\framed[]{
+  \begin{align*}
+    e \in \Exp &::= n \alt e_1 \bop e_2
+  \end{align*}
+}
+
+The above rule states that a syntactically well-formed $\Exp$ (whatever that is) is either an integer ($n$) or some other expression ($e_1$) followed by an operation ($\bop$) and a second expression ($e_2$).
+To show this in action, consider the expression $(3 \times 7) + 23$.
+We can view this as $e_1 + e_2$, where $e_1 = 3 \times 7$ and $e_2 = 23$.
+Going further, $3 \times 7$, AKA $e_1$, can be viewed as $e_3 \times e_4$, where $e_3 = 3$ and $e_4 = 7$.
+From here, $e_2$, $e_3$, and $e_4$ are all integers, and so we can confirm that this expression is syntactically well-formed.
+
+Going back to the difference between concrete and abstract syntax, with the above example, the parentheses were put in place already by the parser.
+As shown, because of the parentheses, there was no ambiguity in figuring out how to look at the same expression through the eyes of abstract syntax.
+
+\section{Semantics}
+At this point, we've defined the abstract syntax of our language.
+Now we need to attach a semantics to this syntax.
+
+\end{document}
