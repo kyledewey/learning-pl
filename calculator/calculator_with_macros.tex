@@ -1,0 +1,84 @@
+\documentclass[nocopyrightspace]{sigplanconf}
+
+\input{macros}
+\usepackage{hyperref}
+
+\begin{document}
+\title{Calculator With Macros}
+\authorinfo{}{}{}
+\date{}
+\maketitle
+
+\section{Introduction and Motivation}
+\label{sec:intro}
+The previous lesson introduced a basic calculator language.
+This language is sufficient for expressing all sorts of arithmetic expressions, though it is sorely lacking in a number of features.
+One such lacking feature is that of \emph{abstraction}: the language does not provide the programmer any means of separating out parts of the program and using them in mostly independent ways.
+
+To demonstrate, let's say the programmer wants to take two Fahrenheit temperatures, convert them to Celcius, and then subtract the first Celcius temperature from the second.
+If the two Fahrenheit temperatures are represented with the variables $f_1$ and $f_2$, then a simple formula for this is the following:
+\begin{align*}
+{\tt toCelcius}(f_1) - {\tt toCelcius}(f_2)
+\end{align*}
+\ldots where {\tt toCelcius} is defined as the following formula:
+\begin{flalign*}
+&{\tt toCelcius} \in \mathbb{R} \to \mathbb{R}&
+\\
+&{\tt toCelcius}(f) = (f - 32) \times (5 \div 9)&
+\end{flalign*}
+
+As shown, the programmer has \emph{abstracted} the formula to convert from Celsius to Fahrenheit into its own \emph{definition}, allowing it to be reused.
+Without this, the programmer would be forced to write out the {\tt toCelcius} formula explicitly each time it is used, as with:
+\begin{align*}
+((f_1 - 32) \times (5 \div 9)) - ((f_2 - 32) \times (5 \div 9))
+\end{align*}
+
+There are a number of disadvantages to having to write out this formula explicitly each time.
+A partial list of resulting issues follows:
+\begin{itemize}
+  \item Generally, the programmer must write more code if abstraction is not possible, meaning more time must be spent coding.
+  \item Repeating the same code over and over can lead to careless translation errors, simply because it is so tedious.
+    For example, if someone mistypes 9 somewhere as 8, the program will not work as intended.
+    This sort of error can be very hard to catch.
+    My own master's thesis (\url{https://ritdml.rit.edu/handle/1850/14123}) showed that in contexts where abstraction is not possible, people will resort to copying and pasting, and errors will happen as a result.
+  \item Even if code is repeated correctly, it makes the code fragile to change.
+    For example, say a programmer retroactively wants to add something to a formula.
+    If abstraction had been in place, this change would be needed only once.
+    Without abstraction, the change must be done everywhere the formula was used.
+    Not only is this tedious, simply figuring out where the formula is used can be a challenge for large programs
+  \item Without abstraction, the programmer generally needs to think about more information at once.
+    For example, with the {\tt toCelcius} abstraction in place, the programmer could treat {\tt toCelcius} as a \emph{black box}: exactly how {\tt toCelcius} worked was unimportant, only that it did work.
+    Without this abstraction, the programmer is forced to read the entire program at once.
+    Abstraction is a basic necessity to allow the act of programming to scale.
+\end{itemize}
+
+To address these problems, we will add abstraction to our calculator language.
+This is actually a very vague statement, as the term ``abstraction'' refers to a wide variety of things.
+In fact, many of the differences between programming languages and even programming styles can be chalked up to how abstractions differ between them.
+Rather than try to touch on all these points at once, we will start of small, and build our way up to more advanced abstraction mechanisms.
+
+\section{Macros}
+As a first step, we will explore the addition of \emph{macros} to our language.
+A macro is an automatic textual substitution mechanism which will allow us to write the abstracted {\tt toCelcius} formula discussed in Section~\ref{sec:intro}.
+The textual substitution will occur right before the program is evaluated, in a phase commonly known as \emph{macro expansion time}.
+After macro expansion is complete, the resulting program still works with our old calculator syntax and semantics, so we do not have to change these at all.
+
+To better understand what this means, consider the macro definition and program below:
+
+\begin{flalign*}
+&{\tt foo}(x, y) = x + y&
+\\
+&{\tt foo}(7, 8) + {\tt foo}(9, 10)&
+\end{flalign*}
+
+The program above defines a macro named {\tt foo} which takes two arguments $x$ and $y$.
+It then uses {\tt foo} on the arguments 7 and 8, along with the arguments 9 and 10 on a second application of {\tt foo}.
+
+After macro expansion finishes, the following program results:
+
+\begin{gather*}
+7 + 8 + 9 + 10
+\end{gather*}
+
+\ldots which clearly works with our existing calculator language definitions.
+\end{document}
