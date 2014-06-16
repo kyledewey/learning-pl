@@ -81,4 +81,32 @@ After macro expansion finishes, the following program results:
 \end{gather*}
 
 \ldots which clearly works with our existing calculator language definitions.
+
+\section{User-Facing Syntax}
+For this addition, the syntax the user uses must change to allow for macro definitions and macro usages (applications).
+The syntax that the calulcator language itself uses, however, does not change.
+As such, the syntax that the calculator language uses is now indirect - the user types code that ultimately gets translated into the calculator language syntax, but the user does not actually write this syntax.
+This sort of situation is very common, as it allows for one to define a more complex language on top of a simpler one.
+In this case, we often refer to the syntax used by the calculator itself as the \emph{intermediate representation}, or \emph{IR} for short.
+
+The new user-facing syntax is below:
+\vspace{1in}
+\framed[]{
+  \begin{gather*}
+    n \in \Int \qquad \ell \in \mtt{MacroName} \qquad x \in \Variable
+  \end{gather*}
+  \vspace{-0.1in}
+  \begin{align*}
+    \bop \in \BinOp &::= + | - | \times | \div
+    \\
+    e \in \Exp &::= n \alt \ell(\vec{e}) \alt e_1 \bop e_2
+    \\
+    m \in \mtt{MacroDefinition} &::= \ell(\vec{x}) = e
+    \\
+    p \in \mtt{Program} &::= \vec{m} \;e
+  \end{align*}
+}
+
+\ldots where the notation $\overrightarrow{thing}$ refers to a possibly empty sequence of that thing.
+For example, $\vec{e}$ refers to a sequence of expressions, and $\vec{x}$ refers to a sequence of variables.
 \end{document}
