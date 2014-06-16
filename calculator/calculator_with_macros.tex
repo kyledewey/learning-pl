@@ -99,14 +99,29 @@ The new user-facing syntax is below:
   \begin{align*}
     \bop \in \BinOp &::= + | - | \times | \div
     \\
-    e \in \Exp &::= n \alt \ell(\vec{e}) \alt e_1 \bop e_2
+    e \in \Exp &::= n \alt e_1 \bop e_2
     \\
     m \in \mtt{MacroDefinition} &::= \ell(\vec{x}) = e
     \\
-    p \in \mtt{Program} &::= \vec{m} \;e
+    me \in \mtt{MacroExp} &::= e \alt \ell(\vec{e}) \alt me_1 \bop me_2
+    \\
+    p \in \mtt{Program} &::= \vec{m} \;me
   \end{align*}
 }
 
 \ldots where the notation $\overrightarrow{thing}$ refers to a possibly empty sequence of that thing.
 For example, $\vec{e}$ refers to a sequence of expressions, and $\vec{x}$ refers to a sequence of variables.
+
+\section{Macro Expansion}
+Now for bringing this syntax to life.
+% We need to define an expansion, and then point out that we intentionally
+% nerfed this with syntax.  Then we need to make the syntax allow for
+% macros used in macros, and show that this introduces issues when it
+% comes to variable names.  This leads to a discussion of scoping, and then an
+% improved macro expansion that handles this.
+% From there, we try to do something recursive, and hit an obvious problem.
+% Fundamentally, the issue is that we want to defer macro expansion until
+% runtime, and thus we set the stage for the introduction of first-order
+% functions.
+
 \end{document}
